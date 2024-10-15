@@ -1,3 +1,0 @@
-select count(customer_id) as customer_count from customers;
-
-запрос считает общее количество покупателей из таблицы customers и присваивает название колонки customers_count
