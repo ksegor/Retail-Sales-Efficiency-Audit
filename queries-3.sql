@@ -13,4 +13,5 @@ JOIN
 GROUP BY 
     e.employee_id, sale_date
 ORDER BY 
-    extract(dow from sale_date), e.last_name, e.first_name;
+    extract(dow from sale_date), concat(e.first_name, ' ', e.last_name);
+

@@ -1,6 +1,6 @@
 select concat(e.first_name, ' ', e.last_name) as seller,
 count(s.sales_id) as operations,
-sum(s.quantity * p.price) as income
+cast(sum(s.quantity * p.price) as bigint) as income
 from sales s
 join employees e on
 s.sales_person_id = e.employee_id
