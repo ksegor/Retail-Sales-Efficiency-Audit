@@ -1,0 +1,101 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import os
+
+# Настройки стиля
+sns.set_theme(style="whitegrid")
+plt.rcParams['figure.figsize'] = (12, 7)
+
+# Пути (соответствуют структуре на GitHub)
+DATA_DIR = 'data/'
+IMG_DIR = 'images/'
+
+# Создаем папку для картинок, если её нет локально
+if not os.path.exists(IMG_DIR):
+    os.makedirs(IMG_DIR)
+
+def create_charts():
+    # 1. Концентрация выручки (Top Sellers)
+    path1 = os.path.join(DATA_DIR, 'top_sellers_income.csv')
+    if os.path.exists(path1):
+        df = pd.read_csv(path1)
+        plt.figure()
+        sns.barplot(data=df.head(10), x='seller', y='income', palette='Blues_r')
+        plt.title('Top 10 Sellers - Revenue Concentration', fontsize=16, fontweight='bold')
+        plt.xticks(rotation=45)
+        plt.tight_layout()
+        plt.savefig(os.path.join(IMG_DIR, 'chart1_top_sellers.png'))
+
+    # 2. Аудит эффективности (Low Performers)
+    path2 = os.path.join(DATA_DIR, 'low_performance_sellers.csv')
+    if os.path.exists(path2):
+        df = pd.read_csv(path2)
+        plt.figure()
+        sns.barplot(data=df, x='seller', y='average_income', palette='Reds')
+        plt.axhline(df['average_income'].mean(), ls='--', color='black', label='Average')
+        plt.title('Efficiency Audit (Sellers Below Average)', fontsize=16, fontweight='bold')
+        plt.xticks(rotation=45)
+        plt.legend()
+        plt.tight_layout()
+        plt.savefig(os.path.join(IMG_DIR, 'chart2_efficiency_audit.png'))
+
+    # 3. Популярные товары (Lead Magnets)
+    path3 = os.path.join(DATA_DIR, 'top_popular_products.csv')
+    if os.path.exists(path3):
+        df = pd.read_csv(path3).head(10)
+        plt.figure()
+        sns.barplot(data=df, x='ProductID', y='TotalQuantity', palette='Greens_r')
+        plt.title('Top 10 Products by Quantity (Lead Magnets)', fontsize=16, fontweight='bold')
+        plt.tight_layout()
+        plt.savefig(os.path.join(IMG_DIR, 'chart3_popular_products.png'))
+
+    # 4. Прибыльные товары (Profit Drivers)
+    path4 = os.path.join(DATA_DIR, 'top_profitable_products.csv')
+    if os.path.exists(path4):
+        df = pd.read_csv(path4).head(10)
+        plt.figure()
+        sns.barplot(data=df, x='ProductID', y='Amount', palette='Oranges_r')
+        plt.title('Top 10 Products by Revenue (Profit Drivers)', fontsize=16, fontweight='bold')
+        plt.tight_layout()
+        plt.savefig(os.path.join(IMG_DIR, 'chart4_profitable_products.png'))
+
+    # 5. Демография (Age Groups)
+    path5 = os.path.join(DATA_DIR, 'total_customer_stats.csv')
+    if os.path.exists(path5):
+        df = pd.read_csv(path5)
+        plt.figure()
+        plt.pie(df['age_count'], labels=df['age_category'], autopct='%1.1f%%', 
+                startangle=140, explode=(0.05, 0.05, 0.1), colors=sns.color_palette('pastel'))
+        plt.title('Demographics - The 40+ Core (60.5%)', fontsize=16, fontweight='bold')
+        plt.savefig(os.path.join(IMG_DIR, 'chart5_demographics.png'))
+
+    # 6. Сезонность (Monthly Trends)
+    path6 = os.path.join(DATA_DIR, 'monthly_sales_trends.csv')
+    if os.path.exists(path6):
+        df = pd.read_csv(path6)
+        plt.figure()
+        sns.lineplot(data=df, x='selling_month', y='income', marker='o', color='red', linewidth=3)
+        plt.title('Monthly Revenue Trend (October Peak)', fontsize=16, fontweight='bold')
+        plt.xticks(rotation=45)
+        plt.tight_layout()
+        plt.savefig(os.path.join(IMG_DIR, 'chart6_monthly_trends.png'))
+
+    # 7. Дни недели (Daily Activity)
+    path7 = os.path.join(DATA_DIR, 'daily_income_analysis.csv')
+    if os.path.exists(path7):
+        df = pd.read_csv(path7)
+        df['day_of_week'] = df['day_of_week'].str.strip().str.capitalize()
+        day_agg = df.groupby('day_of_week')['income'].sum().reset_index()
+        order = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+        day_agg['day_of_week'] = pd.Categorical(day_agg['day_of_week'], categories=order, ordered=True)
+        plt.figure()
+        sns.barplot(data=day_agg.sort_values('day_of_week'), x='day_of_week', y='income', palette='coolwarm')
+        plt.title('Revenue by Day (Monday-Tuesday Peaks)', fontsize=16, fontweight='bold')
+        plt.tight_layout()
+        plt.savefig(os.path.join(IMG_DIR, 'chart7_daily_activity.png'))
+
+    print("Готово! Все графики сохранены в папку images/")
+
+if __name__ == "__main__":
+    create_charts()
