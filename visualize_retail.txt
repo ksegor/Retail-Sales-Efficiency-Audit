@@ -3,15 +3,12 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import os
 
-# Настройки стиля
 sns.set_theme(style="whitegrid")
 plt.rcParams['figure.figsize'] = (12, 7)
 
-# Пути (соответствуют структуре на GitHub)
 DATA_DIR = 'data/'
 IMG_DIR = 'images/'
 
-# Создаем папку для картинок, если её нет локально
 if not os.path.exists(IMG_DIR):
     os.makedirs(IMG_DIR)
 
@@ -98,4 +95,5 @@ def create_charts():
     print("Готово! Все графики сохранены в папку images/")
 
 if __name__ == "__main__":
+
     create_charts()
